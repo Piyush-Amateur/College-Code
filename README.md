@@ -1,2 +1,2 @@
 # College-Code
- All the code throughout the Engineering(S.P.P.U.)
+ All the assignment code throughout the Engineering(S.P.P.U.)
