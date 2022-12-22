@@ -9,17 +9,6 @@ int ch = 1;
 class Marks{
     int history, geo; 
 
-   /* void SetMarks(int history, int geo) // Parameterized constructor
-    {
-        this->history = history; 
-        this->geo = geo;
-    }
-    void PrintMarks()
-    {
-        cout << "\n History score is : " << history;
-        cout << "\n Geography score is : " << geo;
-    }
-*/
     friend class Database; // syntax for friend class
     // Database if friend of Marks (but not the other way around!)
 };
@@ -29,8 +18,11 @@ class Database
     int roll_no;
     long long int phone_no; // since phone number is 10 digits we require more space to store large varible , long long int can store very large numbers
     // can use string instead
-    Marks m;
+
+    Marks m;  // object created (m) of class Marks to access history and geo marks
+
     static string test1; // Defined a static variable
+
     public:
     Database() //Defualt constructor provides random entry 
     {
@@ -43,6 +35,7 @@ class Database
         phone_no = 1234567890;
         this->m.history = 100; // current object . m(Object of Marks class) . history
         // history varaible  {of} m object (Marks class) {of} current object(Database class)
+
         this->m.geo = 100; 
         //geo varaible {of} m object (Marks class) {of} current object (Database class)
     }
@@ -162,15 +155,16 @@ int main()
             {
                 for(int i=0;i<num;i++)
                 {
-                    obj[i].MakeEntry();
+                    obj[i].MakeEntry(); // Make Entry function called on obj [i]
+                    // loop by loop first obj[0].MakeEntry then obj[1].MakeEntry and so on
                 }
             }
-            break;
+            break; // dont forget break
             case 2:
             {
                 for(int i=0;i<num;i++)
                 {
-                    obj[i].print();
+                    obj[i].print(); 
                 }
             }
             break;
