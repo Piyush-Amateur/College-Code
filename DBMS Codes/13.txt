@@ -1,0 +1,127 @@
+db.Employee.insert(
+    {
+        Empid : 1001,
+        Name : {Fname :'Piyush',Lname : 'Tambe'},
+        Company : 'Tata Motors',
+        Salary : '600000',
+        Designation : 'CEO',
+        Age : 20,
+        Expertise : ['Python','C++'],
+        DOB : '15/11/2003',
+        Email : 'piyush15112003@gmail.com',
+        Contact : '7219624684',
+        Address : [{PAddr:"Bhosari",LAddr:"Pune"}]
+     })
+
+
+-- Insert more as per Need :-)
+
+
+------------------------------------------------------------------------------------------
+-- QUERIES ----
+
+
+1. Using aggregation Return separates value in the Expertise array and return sum of each    
+   element of array.
+
+-> db.Employee.aggregate([
+   { $unwind: "$Expertise" },
+   {
+    $group: {
+      _id: "$Expertise",
+      TotalSum: { $sum: "$Salary" }
+    }
+   }
+   ]);
+
+
+
+2. Using Aggregate method return Max and Min Salary for each company.
+
+-> db.Employee.aggregate([
+   {
+    $group: {
+      _id: "$CompanyName",
+      MaxSalary: { $max: "$Salary" },
+      MinSalary: { $min: "$Salary" }
+    }
+   }
+   ]);
+
+
+
+3. Using Aggregate method find Employee with Total Salary for Each City with  
+   Designation="DBA". 
+
+-> db.Employee.aggregate([
+   { $match: { Designation: "DBA" } },
+   {
+      $group: {
+      _id: "$Address.LAddr",
+      TotalSalary: { $sum: "$Salary" }
+    }
+   },
+   {
+    $project: {
+      _id: 0,
+      City: "$_id",
+      TotalSalary: 1
+    }
+   }
+   ]);
+
+
+
+4. Using aggregation method Return separates value in the Expertise array for employee name 
+   where Swapnil Jadhav
+
+-> db.Employee.aggregate([
+   { $match: { "Name.FName": "Swapnil", "Name.LName": "Jadhav" } },
+   { $unwind: "$Expertise" },
+   {
+    $group: {
+      _id: "$_id",
+      Expertise: { $push: "$Expertise" }
+    }
+   },
+   { $project: { _id: 0, Name: { FName: "Swapnil", LName: "Jadhav" }, Expertise: 1 } }
+   ]);
+
+
+
+5. To Create Compound Indexes on Name: 1, Age: -1
+
+-> db.Employee.createIndex({ "Name.FName": 1, "Name.LName": 1, Age: -1 });
+
+
+
+6. Create an Index on Emp_id field , compare the time require to search Emp_id before and 
+   after creating an index. (Hint Add at least 10000 Documents)
+
+-> Before Creating Index
+
+  // Assuming Emp_id is indexed
+  var start = new Date();
+  db.Employee.find({ Emp_id: "some_id" });
+  var end = new Date();
+  print("Time taken without index: " + (end - start) + " milliseconds");
+
+
+-> After Creating Index
+
+  // Creating an index on Emp_id
+  db.Employee.createIndex({ Emp_id: 1 });
+
+  // Searching using the indexed field
+  var start = new Date();
+  db.Employee.find({ Emp_id: "some_id" });
+  var end = new Date();
+  print("Time taken with index: " + (end - start) + " milliseconds");
+
+
+
+
+7. Return a List of Indexes on created on employee Collection.
+
+-> db.Employee.getIndexes();
+

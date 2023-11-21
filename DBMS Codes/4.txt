@@ -1,0 +1,102 @@
+CREATE TABLE Cust_Master(
+	cust_no int PRIMARY KEY,
+	cust_name varchar(50) NOT NULL,
+	cust_addr varchar(100));
+
+CREATE TABLE Order(
+	order_no int PRIMARY KEY,
+	cust_no int,
+	order_date DATE,
+	qty_ordered int,
+	FORIEGN KEY(cust_no) REFERNECES Cust_Master(cust_no) ON DELETE CASCADE);
+
+CREATE TABLE Product(
+	product_no int PRIMARY KEY,
+	product_name varchar(50) NOT NULL,
+	order_no int,
+	FOREIGN KEY(order_no) REFERENCES Order(order_no) ON DELETE CASCADE);
+
+
+-----------------------------------------------------------------------------------
+-- INSERT RECORDS -----
+
+-- Insert Records into table Cust_Master
+
+INSERT INTO Cust_Master VALUES(1001,'John Wick','Australia');
+INSERT INTO Cust_Master VALUES(1002,'Patrick Bateman','India');
+INSERT INTO Cust_Master VALUES(1003,'Thomas Shelby','America');
+
+
+-- Insert Records into table Order
+
+INSERT INTO Order VALUES(1,1001,'2023-01-01',5);
+INSERT INTO Order VALUES(2,1002,'2023-10-15',10);
+INSERT INTO Order VALUES(3,1003,'2023-11-20',15);
+
+-- Insert Records into table Product
+
+INSERT INTO Product VALUES(101,'Product1',1);
+INSERT INTO Product VALUES(102,'Product2',2);
+INSERT INTO Product VALUES(103,'Product3',3);
+
+
+-----------------------------------------------------------------------------------
+-- QUERIES -----
+
+1. List names of customers having 'A' as second letter in their name.
+
+-> SELECT cust_name FROM Cust_Master WHERE cust_name LIKE '_a%';
+
+   OR
+
+   SELECT Cust_name
+   FROM Cust_Master
+   WHERE SUBSTRING(Cust_name, 2, 1) = 'A';
+
+
+2. Display order from Customer no C1002,C1005,C1007 and C1008
+
+-> SELECT * FROM Order WHERE cust_no IN(C1002,C1005,C1007,C1008);
+
+
+3. List Clients who stay in either 'Banglore or 'Manglore'
+
+-> SELECT * FROM Cust_Master WHERE cust_addr IN ('Banglore',Manglore);
+
+
+4. Display name of customers& the product_name they have purchase
+
+-> SELECT Cust_Master.cust_name,Product.product_name
+   FROM Cust_Master
+   JOIN Order ON Cust_Master.cust_no = Order.cust_no
+   JOIN Product ON Order.order_no = Product.order_no;
+
+
+5. Create view View1 consisting of Cust_name, Product_name.
+
+-> CREATE VIEW Viwe1 AS
+   SELECT Cust_Master.cust_name,Product.product_name
+   FROM Cust_Master
+   JOIN Order ON Cust_Master.cust_no = Order.cust_no
+   JOIN Product ON Order.order_no = Product.order_no;
+
+
+6. Disply product_name and quantity purchase by each customer
+
+-> SELECT Cust_Master.cust_name,Product.product_name,Order.qty_ordered
+   FROM Cust_Master
+   JOIN Order ON Cust_Master.cust_no = Order.cust_no
+   JOIN Product ON Order.order_no = Product.order_no
+   ORDER BY Cust_Master.cust_name;
+
+
+7. Perform different joint operation.(eg. INNER JOIN , LEFT JOIN , RIGHT JOIN)
+
+   Display all customers and their orders using INNER JOIN
+
+-> SELECT Cust_Master.cust_name ,Order.*
+   FROM Cust_Master
+   INNER JOIN Order ON Cust_Master.cust_no = Order.cust_no;
+
+
+

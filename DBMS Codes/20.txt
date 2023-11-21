@@ -1,0 +1,73 @@
+SET SERVEROUTPUT ON
+SET VERIFY OFF
+
+CREATE TABLE stud_marks(
+	roll_no NUMBER(20),
+	name varchar2(20),
+	total_marks number(20));
+
+CREATE TABLE result(
+	roll_no number(20),
+	name varchar2(20),
+	class varchar2(20));
+
+
+-----------------------------------------------------------------------------
+-- INSERT RECORDS ----
+
+--> stud_marks Table
+	
+INSERT INTO stud_marks VALUES(1,'Ganesh',1200);
+INSERT INTO stud_marks VALUES(2,'Dinesh',950);
+INSERT INTO stud_marks VALUES(3,'Ashish',850);
+INSERT INTO stud_marks VALUES(4,'Piyush',1000);
+
+-- PL/SQL Block for proc_grade (Procedure)
+
+CREATE OR REPLACE PROCEDURE proc_grade
+(var_rollno IN NUMBER,
+p_roll_no OUT stud_marks.roll_no%type,
+p_name OUT stud_marks.name%type,
+p_total OUT stud_marks.total_marks%type)
+AS
+BEGIN
+	SELECT roll_no ,name,total_marks into p_roll_no,p_name,p_total from stud_marks WHERE roll_no=var_rollno;
+	IF p_total <=1500 and p_total>=990 THEN
+		INSERT INTO result VALUES(p_roll_no,p_name,'Distinction');
+	ELSEIF p_total<= 989 and p_total>=900 THEN
+		INSERT INTO result VALUES(p_roll_no,p_name,'First Class');
+	ELSEIF p_total<=899 and p_total >= 825 THEN
+		INSERT INTO result VALUES(p_roll_no,p_name,'HSC');
+	ELSE		
+		INSERT INTO result VALUES(p_roll_no,p_name,'Fail');
+	END IF;
+	END IF;
+	END IF;
+	
+	EXCEPTION
+	WHEN no_data_found THEN
+	dbms_output.put_line('Roll No '||var_rollno ||' not found');
+
+END;
+/
+
+
+
+-- PL/SQL Block for Calling the Procedure(proc_grade)
+
+DECLARE
+	var_rollno number(20);
+	p_roll_no stud_marks.roll_no%type;
+	p_name stud_marks.name%type;
+	p_total stud_marks.total_marks%type;
+BEGIN
+	var_rollno:=&var_rollno;
+	proc_grade(var_rollno,p_roll,p_name,p_total);
+
+END;
+/
+
+
+
+
+

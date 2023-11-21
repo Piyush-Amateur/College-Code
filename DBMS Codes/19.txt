@@ -1,0 +1,46 @@
+CREATE TABLE emp(
+	emp_no INT,
+	salary NUMBER);
+
+CREATE TABLE increment_salary(
+	emp_no INT ,
+	salary NUMBER);
+
+
+
+
+
+-- PL/SQL Block
+
+
+
+DECLARE
+    v_avg_salary NUMBER;
+
+BEGIN
+    SELECT AVG(salary) INTO v_avg_salary
+    FROM emp;
+
+
+    FOR emp_record IN (SELECT emp_no, salary FROM emp WHERE salary < v_avg_salary)    
+    LOOP
+        DECLARE
+            v_new_salary NUMBER;
+        BEGIN
+            v_new_salary := emp_record.salary * 1.10;
+
+            UPDATE emp
+            SET salary = v_new_salary
+            WHERE emp_no = emp_record.emp_no;
+
+            INSERT INTO increment_salary (emp_no, salary)
+            VALUES (emp_record.emp_no, v_new_salary);
+
+            DBMS_OUTPUT.PUT_LINE('Salary updated for Employee ' || emp_record.emp_no || ' to ' || v_new_salary);
+        EXCEPTION
+            WHEN OTHERS THEN
+                DBMS_OUTPUT.PUT_LINE('Error updating salary for Employee ' || emp_record.emp_no || ': ' || SQLERRM);
+        END;
+    END FOR;
+END;
+/

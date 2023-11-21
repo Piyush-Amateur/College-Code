@@ -1,0 +1,47 @@
+-- PL/SQL Block for Creating Function(Age_calc)
+
+
+CREATE OR REPLACE FUNCTION Age_calc(
+    p_birthdate IN DATE,
+    o_months OUT NUMBER,
+    o_days OUT NUMBER
+) RETURN NUMBER
+IS
+    v_current_date DATE := SYSDATE;
+    v_years NUMBER;
+    v_months NUMBER;
+    v_days NUMBER;
+BEGIN
+    -- Calculate years
+    v_years := TRUNC(MONTHS_BETWEEN(v_current_date, p_birthdate) / 12);
+
+    -- Calculate months
+    v_months := TRUNC(MOD(MONTHS_BETWEEN(v_current_date, p_birthdate), 12));
+
+    -- Calculate days
+    v_days := TRUNC(v_current_date - ADD_MONTHS(p_birthdate, (v_years * 12 + v_months)));
+
+    -- Assign values to OUT parameters
+    o_months := v_months;
+    o_days := v_days;
+
+    -- Return years directly
+    RETURN v_years;
+END Age_calc;
+/
+
+
+
+
+-- PL/SQL Block for Calling Function(Age_calc)
+
+
+DECLARE
+    v_age_years NUMBER;
+    v_age_months NUMBER;
+    v_age_days NUMBER;
+BEGIN
+    v_age_years := Age_calc(DATE '1990-01-15', v_age_months, v_age_days);
+    DBMS_OUTPUT.PUT_LINE('Age: ' || v_age_years || ' years, ' || v_age_months || ' months, ' || v_age_days || ' days');
+END;
+/

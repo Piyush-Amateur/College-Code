@@ -1,0 +1,145 @@
+CREATE TABLE Branch(
+	branch_name varchar(20),
+	branch_city varchar(30),
+	assests double(15),
+	PRIMARY KEY(branch_name));
+
+CREATE TABLE Account(
+	acc_no int,
+	branch_name varchar(20),
+	balance double(15),
+	PRIMARY KEY(acc_no),
+	FOREIGN KEY(branch_name) REFERENCES Branch(branch_name) ON DELETE CASCADE);
+
+CREATE TABLE Customer(
+	cust_name varchar(50),
+	cust_street varchar(50),
+	cust_city varchar(50)
+	);
+
+CREATE TABLE Depositor(
+	cust_name varchar(50),
+	acc_no int ,
+	FOREIGN KEY(acc_no) REFERENCES Account(acc_no) ON DELETE CASCADE);
+
+CREATE TABLE Loan(
+	loan_no int,
+	branch_name varchar(20),
+	amount double(15),
+	PRIMARY KEY(loan_no),
+	FOREIGN KEY(branch_name) REFERENCES Branch(branch_name) ON DELETE CASCADE);
+
+CREATE TABLE Borrower(
+	cust_name varchar(50),
+	loan_no int,
+	FOREIGN KEY(loan_no) REFERENCES Loan(loan_no) ON DELETE CASCADE);
+
+
+-----------------------------------------------------------------------------------
+-- QUERIES ------
+
+1. Create a View1 to display List all customers in alphabetical order who have loan
+   from Pune_Station branch.
+
+-> CREATE VIEW View1 AS 
+   SELECT DISTINCT C.cust_name
+   FROM Customer C
+   JOIN Depositor D ON C.cust_name = D.cust_name
+   JOIN Account A ON D.acc_no = A.acc_no
+   JOIN Loan L ON A.branch_name = L.branch_name
+   WHERE L.branch_name ='Pune_Station'
+   ORDER BY C.cust_name;
+
+
+2. Create View2 on branch table by selecting any two columns and perform insert
+   update delete operations.
+
+-> CREATE VIEW View2 AS
+   SELECT branch_name, branch_city
+   FROM Branch;
+
+-- INSERT operation
+   INSERT INTO View2 (branch_name, branch_city) VALUES ('New_Branch', 'New_City');
+
+-- UPDATE operation
+   UPDATE View2 SET branch_city = 'Updated_City' WHERE branch_name =  
+   'Existing_Branch';
+
+-- DELETE operation
+   DELETE FROM View2 WHERE branch_name = 'Branch_To_Delete';
+
+
+
+3. Create View3 on borrower and depositor table by selecting any one column from 
+   each table perform insert update delete operations.
+
+-> CREATE VIEW View3 AS
+   SELECT B.cust_name AS borrower_name, D.cust_name AS depositor_name
+   FROM Borrower B
+   JOIN Depositor D ON B.cust_name = D.cust_name;
+
+   -- Create an INSTEAD OF INSERT trigger
+   CREATE TRIGGER View3_Insert
+   INSTEAD OF INSERT ON View3
+   FOR EACH ROW
+   BEGIN
+  	 -- Inserting into the Borrower and Depositor tables
+    	 INSERT INTO Borrower (cust_name, loan_no) VALUES (NEW.borrower_name, 	  
+         'NewLoanNo');
+         INSERT INTO Depositor (cust_name, acc_no) VALUES (NEW.depositor_name,  
+         'NewAccNo');
+   END;
+
+   -- Create an INSTEAD OF UPDATE trigger
+   CREATE TRIGGER View3_Update
+   INSTEAD OF UPDATE ON View3
+   FOR EACH ROW
+   BEGIN
+      	 -- Updating the Borrower and Depositor tables
+     	 UPDATE Borrower SET loan_no = 'UpdatedLoanNo' WHERE cust_name = 	  
+ 	 NEW.borrower_name;
+    	 UPDATE Depositor SET acc_no = 'UpdatedAccNo' WHERE cust_name = 
+ 	 NEW.depositor_name;
+   END;
+
+  -- Create an INSTEAD OF DELETE trigger
+  CREATE TRIGGER View3_Delete
+  INSTEAD OF DELETE ON View3
+  FOR EACH ROW
+  BEGIN
+   	 -- Deleting from the Borrower and Depositor tables
+    	 DELETE FROM Borrower WHERE cust_name = OLD.borrower_name;
+    	 DELETE FROM Depositor WHERE cust_name = OLD.depositor_name;
+  END;
+
+
+
+4. Create Union of left and right joint for all customers who have an account or 
+   loan or both at bank
+
+-> SELECT D.cust_name, D.acc_no, NULL AS loan_no
+   FROM Depositor D
+   LEFT JOIN Borrower L ON D.cust_name = L.cust_name
+   UNION
+   SELECT L.cust_name, NULL AS acc_no, L.loan_no
+   FROM Borrower L
+   LEFT JOIN Depositor D ON L.cust_name = D.cust_name;
+
+
+
+5. Create Simple and Unique index.
+
+-> CREATE UNIQUE INDEX idx_cust_name
+   ON Customer(cust_name);
+
+
+6. Display index Information.
+ 
+-> SHOW INDEX FROM Customer;
+
+   OR
+
+   SELECT *
+   FROM information_schema.statistics
+   WHERE table_schema = 'your_database_name' AND table_name = 'Customer';
+

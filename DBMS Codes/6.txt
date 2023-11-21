@@ -1,0 +1,66 @@
+CREATE TABLE Empoyee(
+	emp_id int PRIMARY KEY,
+	emp_name varchar(50),
+	street varchar(50),
+	city varchar(20));
+
+CREATE TABLE Works(
+	emp_name varchar(50),
+ 	company_name varchar(50),
+	salary double(15)
+	FOREIGN KEY(company_name) REFERENCES Company(company_name) ON DELETE 	CASCADE);
+
+CREATE TABLE Company(
+ 	company_name varchar(50) PRIMARY KEY,
+	city varchar(20));
+
+CREATE TABLE Manages(
+	emp_name varchar(50),
+	manager_name varchar(50));
+
+
+-----------------------------------------------------------------------------------
+-- QUERIES -----
+
+1. Change the city of employee working with InfoSys to "Bangalore".
+
+-> UPDATE Employee SET city ='Banglore'
+   WHERE emp_id IN(SELECT E.emp_id FROM Employee E 
+		   JOIN Works W ON E.emp_name = W.emp_name 
+		   WHERE company_name ='Infosys' );
+
+
+2. Find the names of all employees who earn more than the average 
+   salary of all employees of their company. Assume that all people work for at
+   most one company.
+
+-> SELECT E.emp_name 
+   FROM Employee E 
+   JOIN Works W ON E.emp_name = W.emp_name
+   WHERE W.salary > (SELECT AVG(W2.salary) FROM Works W2 
+                     WHERE W.company_name = W2.company_name);
+
+
+3. Find the names, street address, and cities of residence for all employees who
+   work for 'TechM' and earn more than $10,000.
+
+-> SELECT E.emp_name , E.street , E.city FROM Employee E
+   JOIN Works W ON E.emp_name = W.emp_name 
+   WHERE W.company_name='TechM' AND W.salary >'10000';
+
+
+4. Change name of table Manages to Management.
+
+-> ALTER TABLE Manages RENAME TO Management;
+
+
+5. Create Simple and Unique index on employee table.
+
+-> CREATE UNIQUE INDEX idx_employee_name
+   ON Employee(employee_name);
+
+
+
+6. Display index Information 
+
+-> SHOW INDEX FROM Employee;

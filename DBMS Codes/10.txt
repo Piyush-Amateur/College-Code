@@ -1,0 +1,166 @@
+db.Employee.insert(
+    {
+        Empid : 1001,
+        Name : {Fname :'Piyush',Lname : 'Tambe'},
+        Company : 'Tata Motors',
+        Salary : '600000',
+        Designation : 'CEO',
+        Age : 20,
+        Expertise : ['Python','C++'],
+        DOB : '15/11/2003',
+        Email : 'piyush15112003@gmail.com',
+        Contact : '7219624684',
+        Address : [{PAddr:"Bhosari",LAddr:"Pune"}]
+     })
+     
+     
+     
+db.Employee.insert(
+    {
+        Empid : 1002,
+        Name : {Fname :'Shishir',Lname : 'Narkhede'},
+        Company : 'Gooogle',
+        Salary : '650000',
+        Designation : 'Manager',
+        Age : 20,
+        Expertise : 'Critical Thinking',
+        DOB : '3/08/2003',
+        Email : 'shishirname0@gmail.com',
+        Contact : '1234565789',
+        Address : {PAddr:["Malkapur"],LAddr:["Pune"]}
+     })
+     
+     
+     
+db.Employee.insert(
+    {
+        Empid : 1003,
+        Name : {Fname :'Pratik',Lname : 'Manjare'},
+        Company : 'Microsoft',
+        Salary : '600000',
+        Designation : 'CEO',
+        Age : 20,
+        Expertise : 'No SQL',
+        DOB : '10/07/2003',
+        Email : 'pratikmanjare123@gmail.com',
+        Contact : '1234567414',
+        Address : {PAddr:["Khed"],LAddr:["Pune"]}
+     })
+     
+     
+     
+db.Employee.insert(
+    {
+        Empid : 1004,
+        Name : {Fname :'Aditya',Lname : 'Shingote'},
+        Company : 'Infosys',
+        Salary : '600000',
+        Designation : 'CEO',
+        Age : 20,
+        Expertise : 'Java',
+        DOB : '12/01/2003',
+        Email : 'aditya119@gmail.com',
+        Contact : '9876543210',
+        Address : {PAddr:["ABC chowk"],LAddr:["Pune"]}
+     })
+     
+     
+     
+db.Employee.insert(
+    {
+        Empid : 1005,
+        Name : {Fname :'Kaushal',Lname : 'Borkar'},
+        Company : 'Persistant',
+        Salary : '450000',
+        Designation : 'Manager',
+        Age : 20,
+        Expertise : 'Python',
+        DOB : '14/05/2003',
+        Email : 'kborkar150@gmail.com',
+        Contact : '4567891230',
+        Address : {PAddr:["Kothrud"],LAddr:["Pune"]}
+     })
+     
+
+
+------------------------------------------------------------------------------------------
+-- QUERIES ----
+
+
+1. Select all documents where the Designation field has the value "Programmer" and the 
+   value of the salary field is greater than 30000.
+
+-> db.Employee.find({
+   Designation: "Programmer",
+   Salary: { $gt: 30000 }
+   });
+
+
+
+2. Creates a new document if no document in the employee collection contains
+	 {Designation: "Tester", Company_name: "TCS", Age: 25}
+
+-> db.Employee.update(
+   { Designation: "Tester", CompanyName: "TCS", Age: 25 },
+   { $set: {
+      Name: { FName: "New", LName: "Tester" },
+      Salary: 30000,
+      Expertise: ["Testing"],
+      DOB: "1998-01-01",
+      Email: "new.tester@example.com",
+      Contact: "8765432109",
+      Address: [{ PAddr: "Street 3", LAddr: "City 3" }]
+   }},
+   { upsert: true }
+   );
+
+
+
+3. Increase salary of each Employee working with “Infosys" 10000. 
+
+-> db.Employee.update(
+   { CompanyName: "Infosys" },
+   { $inc: { Salary: 10000 } },
+   { multi: true }
+   );
+
+
+4. Finds all employees working with "TCS" and reduce their salary by 5000.
+
+-> db.Employee.update(
+   { CompanyName: "TCS" },
+   { $inc: { Salary: -5000 } },
+   { multi: true }
+   );
+
+
+5. Return documents where Designation is not equal to "Tester".
+
+-> db.Employee.find({
+   Designation: { $ne: "Tester" }
+   });
+
+
+
+6. Find all employee with Exact Match on an Array having 
+   Expertise: ['Mongodb','Mysql','Cassandra'].
+
+-> db.Employee.find({
+   Expertise: ['Mongodb', 'Mysql', 'Cassandra']
+   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

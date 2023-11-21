@@ -1,0 +1,78 @@
+CREATE TABLE Emp (
+    Emp_no NUMBER PRIMARY KEY,
+    Emp_name VARCHAR2(50),
+    Emp_salary NUMBER
+)
+
+
+CREATE TABLE Tracking (
+    Emp_no NUMBER,
+    Emp_salary NUMBER,
+    Tracking_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Emp_no) REFERENCES Emp(Emp_no)
+);
+
+
+-------------------------------------------------------------------------------------------
+-- INSERT RECORDS ----
+
+-- Emp Table
+
+
+INSERT INTO Emp (Emp_no, Emp_name, Emp_salary) VALUES (1, 'John Doe', 60000);
+
+INSERT INTO Emp (Emp_no, Emp_name, Emp_salary) VALUES (2, 'Jane Smith', 45000);
+
+INSERT INTO Emp (Emp_no, Emp_name, Emp_salary) VALUES (3, 'Bob Johnson', 70000);
+
+
+
+
+
+-------------------------------------------------------------------------------------------
+-- PL/SQL Block for Trigger
+
+
+
+CREATE OR REPLACE TRIGGER SalaryCheckTrigger
+AFTER INSERT OR UPDATE OR DELETE
+ON Emp
+FOR EACH ROW
+DECLARE
+    v_new_salary NUMBER;
+BEGIN
+    IF INSERTING THEN
+        -- Check for inserted salary less than Rs. 50,000/-
+        IF :new.Emp_salary < 50000 THEN
+            -- Log the new values in the Tracking table
+            INSERT INTO Tracking (Emp_no, Emp_salary)
+            VALUES (:new.Emp_no, :new.Emp_salary);
+        END IF;
+    ELSIF UPDATING THEN
+        -- Check for updated salary less than Rs. 50,000/-
+        IF :new.Emp_salary < 50000 THEN
+            -- Log the new values in the Tracking table
+            INSERT INTO Tracking (Emp_no, Emp_salary)
+            VALUES (:new.Emp_no, :new.Emp_salary);
+        END IF;
+    END IF;
+END;
+/
+
+
+
+->
+
+-- Updating salary for Jane Smith to less than Rs. 50,000
+UPDATE Emp SET Emp_salary = 48000 WHERE Emp_no = 2;
+
+-- Adding a new employee with salary less than Rs. 50,000
+INSERT INTO Emp (Emp_no, Emp_name, Emp_salary) VALUES (4, 'Alice Johnson', 49000);
+
+-- Deleting an employee
+DELETE FROM Emp WHERE Emp_no = 1;
+
+
+-- Querying the contents of the Tracking table
+SELECT * FROM Tracking;
+

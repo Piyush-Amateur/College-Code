@@ -1,0 +1,60 @@
+CREATE TABLE CUSTOMERS (
+    cust_id NUMBER PRIMARY KEY,
+    cust_name VARCHAR2(50),
+    salary NUMBER
+);
+
+-------------------------------------------------------------------------------------------
+-- INSERTING RECORDS
+
+--> CUSTOMERS Table
+
+INSERT INTO CUSTOMERS (cust_id, cust_name, salary) VALUES (1, 'John Doe', 50000);
+
+INSERT INTO CUSTOMERS (cust_id, cust_name, salary) VALUES (2, 'Jane Smith', 60000);
+
+INSERT INTO CUSTOMERS (cust_id, cust_name, salary) VALUES (3, 'Bob Johnson', 70000);
+
+
+
+
+--------------------------------------------------------------------------------------------
+-- PL/SQL Block for Trigger
+
+
+
+
+CREATE OR REPLACE TRIGGER CustomersTrigger
+BEFORE INSERT OR UPDATE OR DELETE
+ON CUSTOMERS
+FOR EACH ROW
+DECLARE
+    v_salary_diff NUMBER;
+BEGIN
+    IF UPDATING THEN
+        -- Calculate salary difference for UPDATE operation
+        v_salary_diff := :new.salary - :old.salary;
+        DBMS_OUTPUT.PUT_LINE('UPDATE: Salary difference for Customer ' || :new.cust_name || ': ' || v_salary_diff);
+    ELSIF INSERTING THEN
+        -- No need to calculate salary difference for INSERT operation
+        DBMS_OUTPUT.PUT_LINE('INSERT: New customer ' || :new.cust_name || ' added');
+    ELSIF DELETING THEN
+        -- No need to calculate salary difference for DELETE operation
+        DBMS_OUTPUT.PUT_LINE('DELETE: Customer ' || :old.cust_name || ' deleted');
+    END IF;
+END;
+/
+
+
+
+
+->
+
+-- Updating salary for John Doe
+UPDATE CUSTOMERS SET salary = 55000 WHERE cust_id = 1;
+
+-- Adding a new customer
+INSERT INTO CUSTOMERS (cust_id, cust_name, salary) VALUES (4, 'Alice Johnson', 80000);
+
+-- Deleting a customer
+DELETE FROM CUSTOMERS WHERE cust_id = 2;

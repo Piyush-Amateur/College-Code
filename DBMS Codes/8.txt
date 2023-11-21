@@ -1,0 +1,102 @@
+CREATE TABLE Companies(
+	comp_id INT NOT NULL PRIMARY KEY,
+	name varchar(50),
+	cost Double(15));
+
+CREATE TABLE Orders(
+	comp_id INT ,
+	domain varchar(50),
+	quantity int
+	FOREIGN KEY(comp_id) REFERENCES Companies(comp_id) ON DELETE CASCADE);
+
+
+-----------------------------------------------------------------------------------
+-- QUERIES ------
+
+1. Find names, costs, domains and quantities for companies using inner join.
+
+-> SELECT C.name , C.cost ,O.domain ,O.quantity
+   FROM Companies C
+   INNER JOIN Orders O ON C.comp_id = O.comp_id;
+
+
+2. Find names, costs, domains and quantities for companies using left outer join.
+
+-> SELECT C.name , C.cost ,O.domain ,O.quantity
+   FROM Companies C
+   LEFT OUTER JOIN Orders O ON C.comp_id = O.comp_id;
+
+
+3. Find names, costs, domains and quantities for companies using right outer join.
+
+-> SELECT C.name, C.cost, O.domain, O.quantity
+   FROM Orders O
+   RIGHT OUTER JOIN Companies C ON O.comp_id = C.comp_id;
+
+
+4. Find names, costs, domains and quantities for companies using Union operator.
+
+-> SELECT name, cost, NULL AS domain, NULL AS quantity
+   FROM Companies
+   UNION
+   SELECT C.name, C.cost, O.domain, O.quantity
+   FROM Companies C
+   JOIN Orders O ON C.comp_id = O.comp_id;
+
+
+5. Create View View1 by selecting both tables to show company name and quantities.
+
+-> CREATE VIEW View1  AS
+   SELECT C.name,O.quantity
+   FROM Companies C
+   LEFT OUTER JOIN Orders O ON C.comp_id = O.comp_id;
+
+
+6. Create View View2 by selecting any two columns and perform insert update delete 
+   operations.
+
+-> CREATE VIEW View2 AS
+   SELECT C.comp_id, C.name AS company_name, O.quantity
+   FROM Companies C
+   LEFT OUTER JOIN Orders O ON C.comp_id = O.comp_id;
+
+   -- Create an INSTEAD OF INSERT trigger
+      CREATE TRIGGER View2_Insert
+      INSTEAD OF INSERT ON View2
+      FOR EACH ROW
+      BEGIN
+      		INSERT INTO Companies (comp_id, name) VALUES (NEW.comp_id,   
+                NEW.company_name);
+      		INSERT INTO Orders (comp_id, quantity) VALUES (NEW.comp_id, 
+                NEW.quantity);
+      END;
+
+   -- Create an INSTEAD OF UPDATE trigger
+      CREATE TRIGGER View2_Update
+      INSTEAD OF UPDATE ON View2
+      FOR EACH ROW
+      BEGIN
+    		UPDATE Companies SET name = NEW.company_name WHERE comp_id = 
+		NEW.comp_id;
+    		UPDATE Orders SET quantity = NEW.quantity WHERE comp_id = 
+		NEW.comp_id;
+      END;
+
+   -- Create an INSTEAD OF DELETE trigger
+      CREATE TRIGGER View2_Delete
+      INSTEAD OF DELETE ON View2
+      FOR EACH ROW
+      BEGIN
+   		 DELETE FROM Companies WHERE comp_id = OLD.comp_id;
+    		 DELETE FROM Orders WHERE comp_id = OLD.comp_id;
+      END;
+
+
+
+7. Display content of View1, View2.
+
+-> SELECT * FROM View1;
+   SELECT * FROM View2;
+
+
+

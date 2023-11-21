@@ -1,0 +1,61 @@
+from pymongo import MongoClient
+
+client=MongoClient("mongodb://127.0.0.1:27017")
+
+database=client.test1
+
+collection=database.emp
+
+collection.insert_one({"name":"smartphone","quantity":"10","price":"50000"})
+
+print("inserted")
+
+client.close()
+
+# Function to insert a document
+def insert_document(data):
+    result = collection.insert_one(data)
+    print(f"Document inserted with ID: {result.inserted_id}")
+
+# Function to retrieve documents
+def retrieve_documents(query=None):
+    documents = collection.find(query)
+    for document in documents:
+        print(document)
+
+# Function to update a document
+def update_document(query, new_data):
+    result = collection.update_one(query, {"$set": new_data})
+    print(f"Modified {result.modified_count} document(s)")
+
+# Function to delete a document
+def delete_document(query):
+    result = collection.delete_one(query)
+    print(f"Deleted {result.deleted_count} document(s)")
+
+
+if __name__ == "__main__":
+    # Insert a document
+    data_to_insert = {"name": "John Doe", "age": 30, "city": "New York"}
+    insert_document(data_to_insert)
+
+    # Retrieve all documents
+    print("All documents:")
+    retrieve_documents()
+
+    # Update a document
+    update_query = {"name": "John Doe"}
+    new_data = {"$set": {"age": 31}}
+    update_document(update_query, new_data)
+
+    # Retrieve updated documents
+    print("Updated documents:")
+    retrieve_documents()
+
+    # Delete a document
+    delete_query = {"name": "John Doe"}
+    delete_document(delete_query)
+
+    # Retrieve remaining documents after deletion
+    print("Remaining documents:")
+    retrieve_documents()

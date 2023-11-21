@@ -1,0 +1,49 @@
+SET SERVEROUTPUT ON
+SET VERIFY OFF 
+
+CREATE TABLE STUDENT(
+	Roll INT,
+	Name varchar2(30),
+	Attendance INT,
+	Status varchar2(20));
+
+
+
+
+-- PL/SQL Block
+
+DECLARE
+    v_roll_number STUDENT.Roll%TYPE;
+    v_attendance STUDENT.Attendance%TYPE;
+    v_status STUDENT.Status%TYPE;
+BEGIN
+    DBMS_OUTPUT.PUT('Enter Roll Number: ');
+    v_roll_number := &user_input_roll_number;
+
+    SELECT Attendance, Status
+    INTO v_attendance, v_status
+    FROM STUDENT
+    WHERE Roll = v_roll_number;
+
+    IF v_attendance < 75 THEN
+        DBMS_OUTPUT.PUT_LINE('Term not granted');
+        v_status := 'Detained';
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Term granted');
+        v_status := 'Not Detained';
+    END IF;
+
+    UPDATE STUDENT
+    SET Status = v_status
+    WHERE Roll = v_roll_number;
+
+    DBMS_OUTPUT.PUT_LINE('Status updated successfully.');
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Student with Roll Number ' || v_roll_number || ' not found.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+
+END;
+/

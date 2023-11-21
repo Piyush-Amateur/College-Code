@@ -1,0 +1,90 @@
+------------------------------------------------------------------------------------------
+-- Mysql 
+
+
+CREATE TABLE persons (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    age INT,
+    city VARCHAR(255)
+);
+
+
+
+
+-------------------------------------------------------------------------------------------
+-- Python file
+
+
+
+import mysql.connector
+
+# Connect to MySQL
+connection = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="Data_name"
+)
+
+# Create a cursor
+cursor = connection.cursor()
+
+# Function to insert a record
+def insert_record(name, age, city):
+    query = "INSERT INTO your_table_name (name, age, city) VALUES (%s, %s, %s)"
+    values = (name, age, city)
+    cursor.execute(query, values)
+    connection.commit()
+    print(f"Record inserted with ID: {cursor.lastrowid}")
+
+# Function to retrieve records
+def retrieve_records():
+    query = "SELECT * FROM your_table_name"
+    cursor.execute(query)
+    records = cursor.fetchall()
+    for record in records:
+        print(record)
+
+# Function to update a record
+def update_record(record_id, new_age):
+    query = "UPDATE your_table_name SET age = %s WHERE id = %s"
+    values = (new_age, record_id)
+    cursor.execute(query, values)
+    connection.commit()
+    print(f"Updated {cursor.rowcount} record(s)")
+
+# Function to delete a record
+def delete_record(record_id):
+    query = "DELETE FROM your_table_name WHERE id = %s"
+    values = (record_id,)
+    cursor.execute(query, values)
+    connection.commit()
+    print(f"Deleted {cursor.rowcount} record(s)")
+
+# Example usage
+if __name__ == "__main__":
+    # Insert a record
+    insert_record("John Doe", 30, "New York")
+
+    # Retrieve all records
+    print("All records:")
+    retrieve_records()
+
+    # Update a record
+    update_record(1, 31)
+
+    # Retrieve updated records
+    print("Updated records:")
+    retrieve_records()
+
+    # Delete a record
+    delete_record(1)
+
+    # Retrieve remaining records after deletion
+    print("Remaining records:")
+    retrieve_records()
+
+# Close the cursor and connection
+cursor.close()
+connection.close()

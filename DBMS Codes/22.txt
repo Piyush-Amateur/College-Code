@@ -1,0 +1,123 @@
+Create table library(
+	rollno int,
+	name char(10), 
+	dateofissue date, 
+	nameofbook char(10), 
+	status char(10)); 
+
+Create table library_audit(
+	rollno int, 
+	name char(10), 
+	dateofissue date, 
+	nameofbook char(10), 
+	status char(10), 
+	ts timestamp); 
+
+--------------------------------------------------------------------------------------------
+-- INSERT RECORDS ----
+
+Insert into library values (101, 'Ram',to_date('20170923','YYYYMMDD'),'DBMS', 'I'); 
+
+Insert into library values (102, 'Sai',to_date('20170910','YYYYMMDD'),'CN', 'I'); 
+
+Insert into library values (103, 'Laxman',to_date('20170928','YYYYMMDD'),'TOC', 'I'); 
+
+Insert into library values (104, 'Sai',to_date('20170825','YYYYMMDD'),'SEPM','I'); 
+
+Insert into library values (105, 'Ganesh',to_date('20170901','YYYYMMDD'),'IEEE', 'I'); 
+
+
+--------------------------------------------------------------------------------------------
+-- PL/SQL Block for Trigger(AFTER INSERT)
+
+CREATE OR REPLACE TRIGGER after_insert
+AFTER INSERT
+ON library
+FOR EACH ROW
+
+BEGIN
+	Insert into library_audit values(:new.rollno, :new.name, :new.dateofissue, :new.nameofbook, :new.status, current_timestamp);
+
+END;
+/
+
+-> SELECT * FROM library;
+
+-> Insert into library values (106, 'Gajanan',to_date('20171001','YYYYMMDD'),'DDA', 'I'); 
+
+-> SELECT * FROM library;
+
+-> SELECT * FROM library_audit;
+
+
+
+
+
+-- PL/SQL Block for Trigger(AFTER UPDATE)
+
+
+CREATE OR REPLACE TRIGGER after_update 
+AFTER UPDATE 
+ON Library 
+FOR EACH ROW 
+BEGIN 
+	Insert into library audit values(:old.rollno, :old.name, :old.dateofissue, :old.nameofbook, :old.status, current_timestamp); 
+END; 
+/
+
+-> SELECT * FROM library;
+
+-> UPDATE library SET nameofbook ='MongoDB' WHERE library.rollno=101; 
+
+-> SELECT * FROM library;
+
+-> SELECT * FROM library_audit;
+
+
+
+
+
+-- PL/SQL Block for Trigger(AFTER DELETE)
+
+
+CREATE TRIGGER after_delete 
+AFTER DELETE 
+ON Library 
+FOR EACH ROW 
+BEGIN 
+	insert into library audit values(:old.rollno, :old.name, :old.dateofissue, :old.nameofbook, :old.status, current_timestamp); 
+END; 
+/
+
+
+-> SELECT * FROM library;
+
+-> DELETE FROM library WHERE rollno=102; 
+
+-> SELECT * FROM library;
+
+-> SELECT * FROM library_audit;
+
+
+
+
+
+-- PL/SQL Block for Trigger(AFTER INSERT , UPDATE OR DELETE)
+
+CREATE OR REPLACE TRIGGER AT1 
+AFTER INSERT OR DELETE OR UPDATE 
+ON lib 
+FOR EACH ROW 
+
+BEGIN 
+	IF UPDATING THEN 
+		insert into lib audit values(:old.rollno, :old.name, :old.dateofissue, :old.nameofbook, :old.status, current_timestamp, ' UPDATE’); 
+	ELSIF INSERTING THEN 
+	insert into lib audit values(:new.rollno, :new.name, :new.dateofissue, :new.nameofbook, :new.status, current_timestamp,'INSERT’); 
+	ELSIF DELETING THEN 
+		insert into lib audit values(:old.rollno, :old.name, :old.dateofissue, :old.nameofbook, :old.status, current_timestamp, 'DELETE’); 
+	END IF; 
+
+END; 
+/ 
+

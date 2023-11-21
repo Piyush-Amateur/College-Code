@@ -1,0 +1,158 @@
+db.Employee.insert(
+    {
+        Empid : 1001,
+        Name : {Fname :'Piyush',Lname : 'Tambe'},
+        Company : 'Tata Motors',
+        Salary : '600000',
+        Designation : 'CEO',
+        Age : 20,
+        Expertise : ['Python','C++'],
+        DOB : '15/11/2003',
+        Email : 'piyush15112003@gmail.com',
+        Contact : '7219624684',
+        Address : [{PAddr:"Bhosari",LAddr:"Pune"}]
+     })
+
+
+-- Insert more as per Need :-)
+
+
+ 	  /\____/\
+  	 /        \
+        /  ()  ()  \
+	\     .    /
+	 \   ---  /
+	  --------
+	  --------
+
+------------------------------------------------------------------------------------------
+-- QUERIES ----
+
+
+1. Final name of Employee where age is less than 30 and salary 
+more than 50000. 
+
+-> db.Employee.find({
+   Age: { $lt: 30 },
+   Salary: { $gt: 50000 }
+   }, {
+   "Name.FName": 1,
+   "Name.LName": 1,
+   _id: 0
+   });
+
+2. Creates a new document if no document in the employee collection contains
+   {Designation: "Tester", Company_name: "TCS", Age: 25}
+
+-> db.Employee.update(
+   { Designation: "Tester", CompanyName: "TCS", Age: 25 },
+   { $setOnInsert: {
+      Name: { FName: "New", LName: "Tester" },
+      Salary: 30000,
+      Expertise: ["Testing"],
+      DOB: "1998-01-01",
+      Email: "new.tester@example.com",
+      Contact: "8765432109",
+      Address: [{ PAddr: "Street 3", LAddr: "City 3" }]
+   }},
+   { upsert: true }
+   );
+
+
+
+
+3. Selects all documents in the collection where the field age has a value less than 30 or  
+   the value of the salary field is greater than 40000.
+
+-> db.Employee.find({
+   $or: [
+    { Age: { $lt: 30 } },
+    { Salary: { $gt: 40000 } }
+    ]
+   });
+
+
+
+4. Find documents where Designation is not equal to "Developer".
+
+-> db.Employee.find({
+   Designation: { $ne: "Developer" }
+   });
+
+
+
+5. Find _id, Designation, Address and Name from all documents where Company_name is   
+   "Infosys".
+
+-> db.Employee.find(
+   { CompanyName: "Infosys" },
+   { _id: 1, Designation: 1, Address: 1, "Name.FName": 1, "Name.LName": 1 }
+   );
+
+
+
+
+6. Display only FName and LName of all Employees
+
+-> db.Employee.find(
+   {},
+   { "Name.FName": 1, "Name.LName": 1, _id: 0 }
+   );
+
+
+
+
+
+2. Finds all employees working with Company_name: "TCS" and increase their salary by 2000. 
+
+-> db.Employee.update(
+   { CompanyName: "TCS" },
+   { $inc: { Salary: 2000 } },
+   { multi: true }
+   );
+
+
+
+
+3. Matches all documents where the value of the field Address is an embedded document that  
+   contains only the field city withthe value "Pune" and the field Pin_code with the value 
+   "411001".
+
+-> db.Employee.find(
+   { "Address": { $elemMatch: { "PAddr": "Pune", "Pin_code": "411001" } } }
+   );
+
+
+
+4. Find employee details who are working as "Developer" or "Tester".
+
+-> db.Employee.find(
+   { Designation: { $in: ["Developer", "Tester"] } }
+   );
+
+
+
+
+5. Drop Single documents where designation="Developer".
+
+-> db.Employee.remove(
+   { Designation: "Developer" },
+   { justOne: true }
+   );
+
+
+
+6. Count number of documents in employee collection.
+
+-> db.Employee.count();
+
+
+
+
+
+
+
+
+
+
+	   

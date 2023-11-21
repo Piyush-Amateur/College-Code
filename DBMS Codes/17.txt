@@ -1,0 +1,58 @@
+SET SERVEROUTPUT ON 
+SET VERIFY OFF 
+
+CREATE TABLE O_rollcall(
+	O_roll INT,
+	O_name varchar2(30));
+
+CREATE TABLE N_rollcall(
+	N_roll INT,
+	N_name varchar2(30));
+
+-----------------------------------------------------------------------------------
+-- INSERT RECORDS ----
+
+--> O_rollcall Table
+
+-> INSERT INTO O_rollcall VALUES(1,'Shyam');
+-> INSERT INTO O_rollcall VALUES(3,'Seeta');
+
+--> N_rollcall Table
+
+-> INSERT INTO N_rollcall VALUES(2,'Ram');
+-> INSERT INTO N_rollcall VALUES(4,'Laxman');
+
+
+
+
+
+--> PL/SQL block 
+
+DECLARE 
+	rollno NUMBER;
+	flag int(2);
+	CURSOR c_roll(rollno NUMBER) IS SELECT * FROM O_rollcall WHERE O_roll not in
+	(SELECT N_roll FROM N_rollcall WHERE N_rollcall.N_roll = 	O_rollcall.O_roll );
+	info N_rollcall%rowtype;
+BEGIN
+	rollno:=&rollno;
+	flag := 0;
+	open c_roll(rollno);
+	LOOP
+	FETCH c_roll into info;
+	exit WHEN c_roll%notfound;
+	IF(info.N_roll = rollno) THEN
+	INSERT INTO N_rollcall VALUES(info.N_roll,info.N_name);
+	flag:=1;
+	END IF;
+	END LOOP;
+	IF (c_roll%rowcount = 0 or flag =0)THEN
+	dbms_output.put_line('This record already Exists in the table .');
+	ELSE
+	dbms_output.put_line('Record Updated in New table .');
+	END IF;
+
+END;
+/
+
+-> SELECT * FROM N_rollcall;

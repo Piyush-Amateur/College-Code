@@ -1,0 +1,71 @@
+CREATE DATABASE test;
+
+USE test;
+
+CREATE TABLE Branch(
+	branch_name varchar(20),
+	branch_city varchar(30),
+	assests double(15),
+	PRIMARY KEY(branch_name));
+
+CREATE TABLE Account(
+	acc_no int,
+	branch_name varchar(20),
+	balance double(15),
+	PRIMARY KEY(acc_no),
+	FOREIGN KEY(branch_name) REFERENCES Branch(branch_name) ON DELETE CASCADE);
+
+CREATE TABLE Customer(
+	cust_name varchar(50),
+	cust_street varchar(50),
+	cust_city varchar(50)
+	);
+
+CREATE TABLE Depositor(
+	cust_name varchar(50),
+	acc_no int ,
+	FOREIGN KEY(acc_no) REFERENCES Account(acc_no) ON DELETE CASCADE);
+
+CREATE TABLE Loan(
+	loan_no int,
+	branch_name varchar(20),
+	amount double(15),
+	PRIMARY KEY(loan_no),
+	FOREIGN KEY(branch_name) REFERENCES Branch(branch_name) ON DELETE CASCADE);
+
+CREATE TABLE Borrower(
+	cust_name varchar(50),
+	loan_no int,
+	FOREIGN KEY(loan_no) REFERENCES Loan(loan_no) ON DELETE CASCADE);
+
+
+-------------------------------------------------------------------------------------------
+---- QUERIES ------
+
+1. Find the names of all branches in loan relation.
+
+-> SELECT DISTINCT branch_name FROM Loan;
+
+
+2. Find all loan numbers for loans made at „Wadia College‟ Branch 
+with loan amount > 12000.
+
+-> SELECT loan_no FROM Loan WHERE branch_name='Wadia College' AND amount>12000;
+
+
+3. Find all customers who have a loan from bank. Find their 
+names,loan_no and loan amount.
+
+-> SELECT Borrower.cust_name,Borrower.loan_no,Loan.amount From Borrower
+   JOIN Loan ON Loan.loan_no = Borrower.loan_no;
+
+
+4. List all customers in alphabetical order who have loan from "Wadia College" branch.
+
+-> SELECT DISTINCT Borrower.cust_name FROM Borrower
+   JOIN Loan ON Borrower.loan_no = Loan.loan_no WHERE L.branch_name ='Wadia College'
+   ORDER BY Borrower.cust_name;
+
+
+5. Display distinct cities of branch.
+-> SELECT DISTINCT brach_city FROM Branch;

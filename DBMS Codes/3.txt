@@ -1,0 +1,71 @@
+CREATE DATABASE test;
+
+USE test;
+
+CREATE TABLE Branch(
+	branch_name varchar(20),
+	branch_city varchar(30),
+	assests double(15),
+	PRIMARY KEY(branch_name));
+
+CREATE TABLE Account(
+	acc_no int,
+	branch_name varchar(20),
+	balance double(15),
+	PRIMARY KEY(acc_no),
+	FOREIGN KEY(branch_name) REFERENCES Branch(branch_name) ON DELETE CASCADE);
+
+CREATE TABLE Customer(
+	cust_name varchar(50),
+	cust_street varchar(50),
+	cust_city varchar(50)
+	);
+
+CREATE TABLE Depositor(
+	cust_name varchar(50),
+	acc_no int ,
+	FOREIGN KEY(acc_no) REFERENCES Account(acc_no) ON DELETE CASCADE);
+
+CREATE TABLE Loan(
+	loan_no int,
+	branch_name varchar(20),
+	amount double(15),
+	PRIMARY KEY(loan_no),
+	FOREIGN KEY(branch_name) REFERENCES Branch(branch_name) ON DELETE CASCADE);
+
+CREATE TABLE Borrower(
+	cust_name varchar(50),
+	loan_no int,
+	FOREIGN KEY(loan_no) REFERENCES Loan(loan_no) ON DELETE CASCADE);
+
+-------------------------------------------------------------------------------------------
+---- QUERIES ------
+
+1. Find the branches where average account balance > 15000.
+
+-> SELECT branch_name FROM Account GROUP BY branch_name HAVING AVG(balance) > 15000;
+
+
+2. Find number of tuples in customer relation.
+
+-> SELECT COUNT(*) AS ntuples FROM Customer;
+
+
+3. Calculate total loan amount given by bank.
+
+-> SELECT SUM(amount) AS tot_loan FROM Loan;
+
+
+4. Delete all loans with loan amount between 1300 and 1500.
+
+-> DELETE FROM Loan WHERE amount BETWEEN 1300 AND 1500;
+
+
+5. Find the average account balance at each branch
+
+-> SELECT branch_name,AVG(balance) AS average_balance FROM Account GROUP BY branch_name;
+
+
+6. Find name of Customer and city where customer name starts with Letter P.
+
+-> SELECT cust_name ,cust_city FROM Customer WHERE cust_name LIKE 'P%';

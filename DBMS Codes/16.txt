@@ -1,0 +1,67 @@
+SET SERVEROUTPUT ON
+SET VERIFY OFF
+
+CREATE TABLE Borrower(
+	Roll_no INT ,
+	Name varchar2(30),
+	Dateofissue DATE,
+	Nameofbook varchar2(20),
+	Status char(10));
+
+CREATE TABLE Fine(
+	Roll_no INT,
+	Fdate DATE ,
+	Amt INT);
+
+-------------------------------------------------------------------------------------
+-- INSERT RECORDS ----
+
+-- Borrower Table
+
+->Insert into borrower values(101,'Ram' ,to_date('20170923','YYYYMMDD') ,'DBMS','I');
+
+->Insert into borrower values(102,'Sai',to_date('20170910','YYYYMMDD'),'CN','I'); 
+
+->Insert into borrower values(103,'Laxman',to_date('20170928','YYYYMMDD'),'TOC','I');
+
+	-- Insert more records as per need
+
+
+-- PL/SQL block for calculating Fine ::
+
+DECLARE
+	p_nameofbook varchar2(20);
+	p_rollno INT;
+	p_dateofissue DATE;
+	currentdate DATE;
+	noofdays INT;
+	amount NUMBER;
+	nodata EXCEPTION;
+
+BEGIN 
+	p_rollno := &rollno;
+	p_nameofbook :='&nameofbook';
+	currentdate := trunc(SYSDATE);
+	IF p_rollno <= 0 THEN
+		RAISE nodata;
+	END IF;
+	SELECT Dateofissue into p_dateofissue FROM Borrower WHERE Roll_no = 	p_rollno Nameofbook = p_nameofbook;
+	SELECT trunc(SYSDATE)-p_dateofissue INTO noofdays from dual;
+	dbms_output.put_line('No. of Days : '||noofdays);
+	IF(noofdays > 30) THEN amount:=noofdays*50;
+	ELSEIF(noofdays >=15 AND noofdays<=30) THEN amount:=noofdays*5;
+	END IF;
+	IF amount >0 THEN
+		INSERT INTO Fine VALUES(p_rollno,sysdate,amount);
+	END IF;
+		UPDATE Borrower SET Status='R' WHERE Roll_no = p_rollno;
+
+	EXCEPTION 
+	WHEN nodata THEN 
+		dbms_output.put_line('Roll Number Not Found !!');
+
+END;
+/
+	
+
+-> SELECT * FROM Fine ;

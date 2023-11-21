@@ -1,0 +1,73 @@
+db.Employee.insert(
+    {
+        Empid : 1001,
+        Name : {Fname :'Piyush',Lname : 'Tambe'},
+        Company : 'Tata Motors',
+        Salary : '600000',
+        Designation : 'CEO',
+        Age : 20,
+        Expertise : ['Python','C++'],
+        DOB : '15/11/2003',
+        Email : 'piyush15112003@gmail.com',
+        Contact : '7219624684',
+        Address : [{PAddr:"Bhosari",LAddr:"Pune"}]
+     })
+
+
+-- Insert more as per Need :-)
+
+
+------------------------------------------------------------------------------------------
+-- QUERIES ----
+
+
+1. Display the total salary of per company
+-> db.Employee.aggregate([
+   {
+    $group: {
+      _id: "$CompanyName",
+      TotalSalary: { $sum: "$Salary" }
+    }
+   }
+   ]);
+
+
+
+2. Display the total salary of company Name:"TCS"
+
+-> db.Employee.aggregate([
+   {
+    $match: { CompanyName: "TCS" }
+   },
+   {
+    $group: {
+      _id: "$CompanyName",
+      TotalSalary: { $sum: "$Salary" }
+    }
+   }
+   ]);
+
+
+3. Return the average salary of company whose address is “Pune".
+
+-> db.Employee.aggregate([
+   {
+    $match: { "Address.LAddr": "Pune" }
+   },
+   {
+    $group: {
+      _id: "$CompanyName",
+      AverageSalary: { $avg: "$Salary" }
+    }
+   }
+   ]);
+
+
+4. Display total count for “City=Pune”
+
+-> db.Employee.find({ "Address.LAddr": "Pune" }).count();
+
+
+5. Return count for city pune and age greater than 40.
+
+->db.Employee.find({ "Address.LAddr": "Pune", Age: { $gt: 40 } }).count();

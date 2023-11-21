@@ -1,0 +1,24 @@
+SET SERVEROUTPUT ON
+SET VERIFY OFF
+
+CREATE TABLE AreaOfCircle(
+	Radius NUMBER,
+	Area DECIMAL);
+
+DECLARE
+	p_area AreaOfCircle.Area%TYPE;
+	r NUMBER;
+	pi NUMBER:= 3.14;
+BEGIN
+	r:= 5;
+	FOR r IN 5..9
+	LOOP
+	p_area := pi *r*r;
+	INSERT INTO AreaOfCircle VALUES(r,p_area);
+
+	DBMS_OUTPUT.PUT_LINE('Radius : '||r);
+	DBMS_OUTPUT.PUT_LINE('Area : '||p_area);
+	END LOOP;
+
+END;
+/
