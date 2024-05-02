@@ -1,0 +1,19 @@
+Steps for Installation and Configuration of virtualization using KVM: 
+
+1. Run the following commands on the terminal 
+	1. sudo dmesg | grep kvm 
+	2. apt update
+ 		sudo apt install qemu-kvm libvirt-daemon-system virt-manager 
+	3. sudo adduser $USER libvirt 
+	4. sudo systemctl enable libvirtd.service --now 
+
+2. Open the Virtual Machine Manager app from the application tray, an option titled          “QEMU/KVM” should appear
+
+3. Click on File -->Create New virtual machine
+4. Select Local install media (1st option) and click on 'forward' button 
+   Browse ( browse local) for an ISO file (fedora iso file already available on most of pc) and then click on    
+   forward .... forward .... forward 
+
+5. Press Enter on --> Test this media and start the fedora workstation
+   Done VM started 
+6. Now write a Python code and take execute it.

@@ -1,0 +1,188 @@
+1. Sign in to your Salesforce account by entering your credentials.
+
+2. Click on the gear icon (⚙️) located at the top right corner of your Salesforce homepage, then select "Developer console", it will redirect you to a new tab.
+
+3. Create a new Apex class (File -> New -> Apex Class) and a new Visualforce Page (File -> New -> Visualforce Page).
+
+4. Give the apex class a name as "CreateAccount" and similar for the Visualforce page "CreateAccount", extension will be generated automatically.
+
+5. Content in "CreateAccount.apxc" is as follows
+
+#-------------------------------------------------------------------------------------------------------------------
+
+public class CreateAccount{
+	public String name {get; set;}
+	public String phoneNumber {get; set;}
+	public String selectedname {get; set;}
+	public String state {get; set;}
+    public String city {get; set;}
+    public String pincode {get; set;}
+    public String email { get; set; }
+    
+    
+    
+	public List<Selectoption> lstnamesel {get; set;}
+    public List<Selectoption> statenamesel {get; set;}
+	public CreateAccount(ApexPages.StandardController controller){
+		lstnamesel = new List<selectoption>();
+		lstnamesel.add(new selectOption('','- None -'));
+		lstnamesel.add(new selectOption('Basic','Basic'));
+		lstnamesel.add(new selectOption('Premium','Premium'));
+		lstnamesel.add(new selectOption('Luxury','Luxury'));
+		lstnamesel.add(new selectOption('Ultra Luxury','Ultra Luxury'));
+        
+   		statenamesel = new List<selectoption>();
+		statenamesel.add(new selectOption('','- None -'));
+		statenamesel.add(new selectOption('Andhra Pradesh','Andhra Pradesh'));
+		statenamesel.add(new selectOption('Arunachal Pradesh','Arunachal Pradesh'));
+		statenamesel.add(new selectOption('Assam','Assam'));
+		statenamesel.add(new selectOption('Bihar','Bihar'));
+        statenamesel.add(new selectOption('Chhattisgarh','Chhattisgarh'));
+        statenamesel.add(new selectOption('Goa','Goa'));
+        statenamesel.add(new selectOption('Gujarat','Gujarat'));
+        statenamesel.add(new selectOption('Haryana','Haryana'));
+        statenamesel.add(new selectOption('Himachal Pradesh','Himachal Pradesh'));
+        statenamesel.add(new selectOption('Karnataka','Karnataka'));
+        statenamesel.add(new selectOption('Kerala','Kerala'));
+        statenamesel.add(new selectOption('Maharashtra','Maharashtra'));
+        statenamesel.add(new selectOption('Madhya Pradesh','Madhya Pradesh'));
+        statenamesel.add(new selectOption('Manipur','Manipur'));
+        statenamesel.add(new selectOption('Meghalaya','Meghalaya'));
+        statenamesel.add(new selectOption('Mizoram','Mizoram'));
+        statenamesel.add(new selectOption('Nagaland','Nagaland'));
+        statenamesel.add(new selectOption('Odisha','Odisha'));
+        statenamesel.add(new selectOption('Punjab','Punjab'));
+		statenamesel.add(new selectOption('Rajasthan','Rajasthan'));
+        statenamesel.add(new selectOption('Sikkim','Sikkim'));
+        statenamesel.add(new selectOption('Tamil Nadu','Tamil Nadu'));
+        statenamesel.add(new selectOption('Tripura','Tripura'));
+        statenamesel.add(new selectOption('Telangana','Telangana'));
+        statenamesel.add(new selectOption('Uttar Pradesh','Uttar Pradesh'));
+        statenamesel.add(new selectOption('Uttarakhand','Uttarakhand'));
+        statenamesel.add(new selectOption('West Bengal','West Bengal'));
+        statenamesel.add(new selectOption('Andaman & Nicobar (UT)','Andaman & Nicobar (UT)'));
+        statenamesel.add(new selectOption('Chandigarh (UT)','Chandigarh (UT)'));
+        statenamesel.add(new selectOption('Dadra & Nagar Haveli and Daman & Diu (UT)','Dadra & Nagar Haveli and Daman & Diu (UT)'));
+        statenamesel.add(new selectOption('Delhi [National Capital Territory (NCT)]','Delhi [National Capital Territory (NCT)]'));
+        statenamesel.add(new selectOption('Jammu & Kashmir (UT)','Jammu & Kashmir (UT)'));
+        statenamesel.add(new selectOption('Ladakh (UT)','Ladakh (UT)'));
+        statenamesel.add(new selectOption('Lakshadweep (UT)','Lakshadweep (UT)'));
+        statenamesel.add(new selectOption('Puducherry (UT)','Puducherry (UT)'));
+		
+    	}
+		public PageReference createAccount() {
+			System.debug('teset create');
+            
+            String phoneRegex = '^[0-9]{10}$'; // Assumes 10 digits without any formatting
+    		Pattern phonePattern = Pattern.compile(phoneRegex);
+
+    		if (String.isBlank(name)) {
+       			 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, 'Please enter Account Name'));
+       			 return null;
+    		}
+
+    // Validate phone number format
+    		if (!String.isBlank(phoneNumber)) {
+        		Matcher phoneMatcher = phonePattern.matcher(phoneNumber);
+        	if (!phoneMatcher.matches()) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Please enter a valid 10-digit phone number.'));
+            return null;
+        }
+    }
+            
+			if(!String.isEmpty(name)) {
+				Account accountRecord = new Account(Name = name,
+				Phone = phoneNumber,
+                Email__c = email,
+				Room_type__c = selectedname,
+				States_in__c = state,
+   				city__c = city,                                 
+				postal_code__c = pincode);
+				INSERT accountRecord;
+				PageReference pg = new PageReference('/'+accountRecord.Id);
+				pg.setRedirect(true);
+				return pg;
+            }
+			else {
+				ApexPages.addmessage(new ApexPages.message(ApexPages.severity.CONFIRM,'Please enter Account Name'));
+			}
+		return NULL;
+}
+		public PageReference cancelAccount() {
+		PageReference pg = new PageReference('/'+Schema.SObjectType.Account.getKeyPrefix()+'/o');return pg;
+		}
+}
+
+
+
+#---------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+6. Content in "CreateAccount.vfp" is as follows:
+
+
+#---------------------------------------------------------------------------------------------------------
+
+<apex:page standardController="Account" extensions="CreateAccount">
+        <style>
+            .center {
+                margin: 0 auto;
+                width: 50%; /* Adjust the width as per your requirement */
+                text-align: center;
+            }
+            .requiredInput {
+                display: inline-block;
+                position: relative;
+            }
+            .requiredBlock {
+                background-color: #ffb3b3;
+                position: absolute;
+                top: 0;
+                left: -1px;
+                bottom: 0;
+                width: 3px;
+                pointer-events: none;
+            }
+        </style>  
+    
+        <div class="center">
+            <apex:form id="apexForm">
+                <apex:pageMessages />
+                <apex:pageBlock title="Hotel Room Booking">
+                    <apex:pageBlockSection title="Customer Information" columns="1">
+                        <apex:inputText value="{!name}" label="Name"/>
+                        <apex:inputText value="{!phoneNumber}" label="Phone"/>
+                        <apex:inputText value="{!email}" label="E-mail"/>
+                        <apex:selectList value="{!selectedname}" size="1" label="Room Type">
+                            <apex:selectOptions value="{!lstnamesel}"/>
+                        </apex:selectList>
+                        <apex:selectList value="{!state}" size="1" label="State">
+                            <apex:selectOptions value="{!statenamesel}"/>
+                        </apex:selectList>
+                        <apex:inputText value="{!city}" label="City"/>
+                        <apex:inputText value="{!pincode}" label="Postal Code"/>
+                    </apex:pageBlockSection>
+                    
+                    <apex:commandButton action="{!createAccount}" value="Save"/>
+                    <apex:commandButton action="{!cancelAccount}" value="Cancel"/>
+               
+                </apex:pageBlock>
+            </apex:form>
+        </div>
+    </apex:page>
+
+#---------------------------------------------------------------------------------------------------------
+
+
+7. Click 'Preview' on the vfp page where the code for "CreateAccount.vfp" is written.
+
+8. After clicking Preview you will be redirected to a new page where the Interface of your code will be seen save the account information. 
+
+9. To view the account created you will be able to see it in the Service Section in 𓃑 icon at top left side of the dashboard.
+
+10. After performing these operations, logout from your Salesforce account.
+

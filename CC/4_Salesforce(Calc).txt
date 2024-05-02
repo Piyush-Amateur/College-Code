@@ -1,0 +1,297 @@
+1. Code for the "Homepage controller" 
+
+--------------------------------------------------------------------------------------------------------------------
+HomePageController.apxc
+--------------------------------------------------------------------------------------------------------------------
+
+public class HomePageController { 
+    public String selectedConversionType { get; set; } 
+     
+    public List<SelectOption> getItems() { 
+        List<SelectOption> options = new List<SelectOption>(); 
+        //options.add(new SelectOption('--None--', '------'));
+        options.add(new SelectOption('Addition', 'Addition')); 
+        options.add(new SelectOption('Subtraction', 'Subtraction')); 
+        options.add(new SelectOption('Weight Conversion', 'Weight Conversion')); 
+         
+        return options; 
+    } 
+     
+    public PageReference redirectToConversionPage() { 
+        if(selectedConversionType == 'Addition') { 
+            return Page.Add; 
+        } else if(selectedConversionType == 'Subtraction') { 
+            return Page.Sub; 
+        } else if(selectedConversionType == 'Weight Conversion') { 
+            return Page.Weight; 
+        } 
+        return null; 
+    } 
+} 
+
+
+--------------------------------------------------------------------------------------------------------------------
+HomePageController.vfp
+--------------------------------------------------------------------------------------------------------------------
+
+<apex:page controller="HomePageController"> 
+    <style> 
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: grey; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+        } 
+        .container { 
+            width: 600px; 
+            padding: 20px; 
+            background-color: #fff; 
+            border-radius: 5px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        } 
+        .header { 
+            text-align: center; 
+            margin-bottom: 20px; 
+            color: purple; 
+         font-size: 20px; 
+        } 
+        .select-section { 
+            text-align: center; 
+            margin-bottom: 20px; 
+        } 
+        .btn-go { 
+            background-color: #007bff; 
+            color: #fff; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            transition: background-color 0.3s ease; 
+            font-size: 16px; 
+            width: 100%; 
+        } 
+        .btn-go:hover { 
+            background-color: #0056b3; 
+        } 
+    </style> 
+ 
+    <apex:form > 
+        <div class="container"> 
+            <div class="header"> 
+                <h1 style="color: black; font-weight: bold; font-size: 30px">Calculator</h1> <!-- Change 
+header color --> 
+                <p>Select Operation Type</p> 
+            </div> 
+            <div class="select-section"> 
+                <apex:selectList value="{!selectedConversionType}" label="Conversion Type"> 
+                    <apex:selectOptions value="{!items}"/> 
+                </apex:selectList> 
+            </div> 
+            <div style="text-align: center;"> 
+                <apex:commandButton value="Proceed" styleClass="btn-go" 
+action="{!redirectToConversionPage}"/> 
+            </div> 
+        </div> 
+    </apex:form> 
+</apex:page>
+
+
+
+
+
+
+
+
+2. Code for "Additon" 
+
+--------------------------------------------------------------------------------------------------------------------
+Add.apxc
+--------------------------------------------------------------------------------------------------------------------
+
+public class Add {
+    public Decimal number1 {get; set;}
+    public Decimal number2 {get; set;}
+    public Decimal result {get; set;}
+
+    // Constructor
+    public Add() {
+        this.number1 = 0;
+        this.number2 = 0;
+        this.result = null;
+    }
+    
+    // Method to calculate and update the sum
+    public void calculateSum() {
+        result = number1 + number2;
+    }
+}
+
+--------------------------------------------------------------------------------------------------------------------
+Add.vfp
+--------------------------------------------------------------------------------------------------------------------
+
+<apex:page controller="Add">
+    <apex:form>
+        <apex:pageBlock title="Simple Addition Calculator">
+            <apex:pageBlockSection columns="2">
+                <apex:inputText label="Number 1" value="{!number1}"/>
+                <apex:inputText label="Number 2" value="{!number2}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons>
+                <apex:commandButton value="Calculate Sum" action="{!calculateSum}" rerender="resultSection"/>
+            </apex:pageBlockButtons>
+            <apex:outputPanel id="resultSection">
+                <apex:pageBlockSection title="Result">
+                    <apex:outputText value="{!result}"/>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
+
+
+
+
+
+
+3. Code for "Subtraction"
+
+--------------------------------------------------------------------------------------------------------------------
+Sub.apxc
+--------------------------------------------------------------------------------------------------------------------
+
+public class Sub {
+    public Decimal number1 {get; set;}
+    public Decimal number2 {get; set;}
+    public Decimal result {get; set;}
+
+    // Constructor
+    public Sub() {
+        this.number1 = 0;
+        this.number2 = 0;
+        this.result = null;
+    }
+    
+    // Method to calculate and update the sum
+    public void calculateSum() {
+        result = number1 - number2;
+    }
+}
+
+--------------------------------------------------------------------------------------------------------------------
+Sub.vfp
+--------------------------------------------------------------------------------------------------------------------
+
+<apex:page controller="Sub">
+    <apex:form>
+        <apex:pageBlock title="Simple Subtraction Calculator">
+            <apex:pageBlockSection columns="2">
+                <apex:inputText label="Number 1" value="{!number1}"/>
+                <apex:inputText label="Number 2" value="{!number2}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons>
+                <apex:commandButton value="Calculate Sum" action="{!calculateSum}" rerender="resultSection"/>
+            </apex:pageBlockButtons>
+            <apex:outputPanel id="resultSection">
+                <apex:pageBlockSection title="Result">
+                    <apex:outputText value="{!result}"/>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
+
+
+
+
+
+4. Code for "Weight Conversion"
+
+--------------------------------------------------------------------------------------------------------------------
+Weight.apxc
+--------------------------------------------------------------------------------------------------------------------
+
+public class Weight{
+    public String fromUnit { get; set; }
+    public Decimal fromValue { get; set; }
+    public String toUnit { get; set; }
+    public Decimal convertedValue { get; set; }
+    
+    public List<SelectOption> getUnitOptions() {
+        List<SelectOption> options = new List<SelectOption>();
+        options.add(new SelectOption('Milligrams', 'Milligrams'));
+        options.add(new SelectOption('Grams', 'Grams'));
+        options.add(new SelectOption('Kilograms', 'Kilograms'));
+        options.add(new SelectOption('Tonnes', 'Tonnes'));
+        return options;
+    }
+    
+    public void convert() {
+        if (fromUnit == toUnit) {
+            convertedValue = fromValue;
+            return;
+        }
+        
+        Decimal result = 0;
+        if (fromUnit == 'Milligrams') {
+            result = fromValue / 1000;
+        } else if (fromUnit == 'Grams') {
+            result = fromValue;
+        } else if (fromUnit == 'Kilograms') {
+            result = fromValue * 1000;
+        } else if (fromUnit == 'Tonnes') {
+            result = fromValue * 1000000;
+        }
+        
+        if (toUnit == 'Milligrams') {
+            convertedValue = result * 1000;
+        } else if (toUnit == 'Grams') {
+            convertedValue = result;
+        } else if (toUnit == 'Kilograms') {
+            convertedValue = result / 1000;
+        } else if (toUnit == 'Tonnes') {
+            convertedValue = result / 1000000;
+        }
+    }
+}
+
+--------------------------------------------------------------------------------------------------------------------
+Weight.vfp
+--------------------------------------------------------------------------------------------------------------------
+
+<apex:page controller="Weight">
+    
+    <apex:form >
+        <apex:pageBlock title="Weight Conversion">
+            <apex:pageBlockSection columns="1">
+                <div class="inputContainer">
+                    <apex:selectList value="{!fromUnit}" size="1">
+                        <apex:selectOptions value="{!unitOptions}"/>
+                    </apex:selectList>
+                    
+                    <apex:inputText value="{!fromValue}" label="Value"/>
+                    
+                    <apex:selectList value="{!toUnit}" size="1">
+                        <apex:selectOptions value="{!unitOptions}"/>
+                    </apex:selectList>
+                </div>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection >
+                <apex:commandButton value="Convert" action="{!convert}"/>
+             </apex:pageBlockSection>
+             
+            <apex:pageBlockSection title="Converted Value" collapsible="false">
+                <apex:outputPanel id="outputPanel">
+                    <apex:outputText value="{0, number, #,##0.00}">
+                        <apex:param value="{!convertedValue}"/>
+                    </apex:outputText>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

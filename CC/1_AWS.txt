@@ -1,0 +1,29 @@
+1. Login to your AWS account by entering your credentials.
+
+2. After logging in Go to AWS dashboard and EC2 service.
+
+3. Select the "Instances" option in the navigation menu on the left side of the dashboard.
+
+4. If there is no instance, create a new instance by clicking the Launch Instances button.
+
+5. 
+	-> Provide the name of your EC2 instance (eg. instance1 ) in the "Name and tags section".
+   	-> In the "Application and OS image(AMI)" section select Amazon Linux instance, let the architecture be 
+	   64-bit(x86).
+	-> In the "Instance type" section select any free tier eligible instance (eg. t3.micro or t2.micro).
+	-> In the "Key pain(login)" section select Create new key pair, enter the name of the key pair, let the type be 	   RSA and format be .pem, then click on the "Create key pair" button.
+	-> Let other sections remain as default.
+	-> Click on Launch instance.
+
+6. After creating an instance a page will be loaded, click "Connect to your instance", and you will be redirected to a new tab.
+
+7. Navigate to "SSH client".
+
+8. Copy the command at step 3 on the 'Connect to instance' page and paste it into your Linux terminal.
+
+9. Then copy the command written below Example:(something like "ssh -i "temp.pem" ec2-user@ec2-13-51-108-161.eu-
+   north-1.compute.amazonaws.com") and paste it into your Linux terminal. 
+
+10. Create a Python program and execute it in the terminal.
+
+11. Stop and Terminate your instance after performing your operations.
