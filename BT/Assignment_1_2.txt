@@ -1,0 +1,55 @@
+// Installation of Metamask and study spending Ether per transactions
+
+STEP-1
+
+Go to the Firefox Browser and Search for "Download metamask extension" and click on the first link.
+
+STEP-2
+
+On the loaded page click on the 'Install MetaMask for Firefox' button colored in Blue color
+-- You will be redirected to new page
+
+STEP-3
+
+On the redirected page click on the 'Add to Firefox' button colored in Blue color
+-- After that the Extension will be added to your Firefox Browser
+
+STEP-4
+
+Click on the MetaMask Extension
+
+STEP-5 
+
+Tick the check box for agreeing to Metamask's Terms of use
+and then click on 'Create New Wallet' Button
+
+STEP-6
+
+On next page click on 'I agree' button
+
+STEP-7 
+
+Create a password for your Metamask's Wallet
+Tick the check box
+Click on 'Create a new Wallet' Button
+
+STEP-8
+
+Click on 'Remind me later' on the next page
+
+STEP-9
+
+To add 'SepoliaETH' which is a part of Test Network.
+Visit the websit 'https://faucets.chain.link/sepolia' or type 'Chainlink Faucet' on your web Browser.
+On that page select the 'Ethereum Sepolia' after that click on Continue Button at Bottom of Screen.
+
+STEP-10
+
+Copy your Wallet Address from the MetaMask and paste in the Address box and then
+click on "Get Tokens" Button
+
+STEP-11
+
+Check for Token if updated in Metamask Account
+
+

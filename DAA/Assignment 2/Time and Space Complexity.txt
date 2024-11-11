@@ -1,0 +1,38 @@
+Time and Space Complexity Analysis
+
+
+
+
+Time Complexity:
+
+The primary time-consuming operations are the construction of the Huffman tree and the generation of codes.
+
+Building the Min-Heap: It takes O(nlogn) to build the heap, where n is the number of characters.
+
+Merging Nodes: Every time we merge two nodes, it takes O(logn) to insert the merged node back into the heap. Since we perform this operation n−1 times, the total time complexity for this step is O(nlogn).
+
+Generating Codes: Traversing the tree to generate the codes takes O(n).
+
+Therefore, the overall time complexity is O(nlogn).
+
+
+
+
+
+Space Complexity:
+
+The space complexity is dominated by the space required for:
+
+Storing the Min-Heap: This requires O(n) space.
+
+Huffman Tree: Each node in the tree also takes O(n) space.
+
+Storing the Codes: This takes O(n) space for storing the codes.
+
+Thus, the overall space complexity is O(n).
+
+
+
+
+Execution Time
+The execution time will vary based on the input size and system performance. You can observe the time taken to compute the Huffman encoding in the outputs for both Python and C++ programs as shown in the code examples.

@@ -1,0 +1,25 @@
+Time and Space Complexity Analysis
+
+
+1. Iterative Approach (Python & C++)
+
+Time Complexity: O(n)
+The loop runs n−1 times, so it takes linear time.
+
+Space Complexity:O(1)
+Only a constant amount of space is used (variables a and b), so it takes constant space.
+
+
+
+2. Recursive Approach (Python & C++)
+
+Time Complexity: O(2^n)
+Each call splits into two more calls (for n-1 and n-2), so it grows exponentially with the size of n.
+
+
+Space Complexity: O(n)
+The recursion depth is proportional to n, so the space complexity is linear due to the call stack.
+
+
+Note:
+The recursive method has poor performance for large values of n due to the repeated calculation of the same Fibonacci numbers. Memoization or dynamic programming can be used to optimize it.

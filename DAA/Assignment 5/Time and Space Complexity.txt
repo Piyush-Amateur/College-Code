@@ -1,0 +1,17 @@
+Time Complexity
+For the n-Queens problem:
+
+Worst-case Time Complexity: O(n!)
+In the worst case, the algorithm explores all possible placements of queens. For each queen, it tries placing it in one of n columns, resulting in n! possible placements in the search tree.
+
+However, pruning with the isSafe() function helps reduce the actual search space significantly.
+
+
+
+
+
+
+Space Complexity
+
+Space Complexity: O(n^2)
+The space complexity is determined by the size of the board, which is n×n. We also use a recursion stack, which can go as deep as O(n). Hence, the total space complexity is O(n^2)

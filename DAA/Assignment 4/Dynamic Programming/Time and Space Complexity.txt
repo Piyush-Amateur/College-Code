@@ -1,0 +1,9 @@
+Time and Space Complexity (DP) Approach:
+
+
+Time Complexity:
+ O(n×W), where n is the number of items and W is the capacity of the knapsack. This is because we fill an n×W table.
+
+
+Space Complexity: 
+O(n×W), since we use a 2D array (DP table) to store intermediate results.

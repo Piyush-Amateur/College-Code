@@ -1,0 +1,15 @@
+Time and Space Complexity (Branch and Bound):
+
+
+
+Time Complexity:
+In the worst case, Branch and Bound can explore all nodes of the decision tree, which is O(2^n ). 
+However, pruning reduces the number of nodes explored, leading to an average-case complexity better than O(2^n ), depending on the problem.
+
+
+
+Space Complexity:
+The space complexity is O(2^n) in the worst case due to the storage of nodes in the priority queue.
+
+
+Branch and Bound is typically faster than brute-force approaches, but the complexity remains exponential in the worst case.
